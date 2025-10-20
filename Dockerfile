@@ -41,14 +41,28 @@ RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# 3) Instalar dependencias Python
+# 3) Font Aria pdf docx
+RUN apt-get update && \
+    apt-get install -y fonts-liberation fontconfig && \
+    fc-cache -f -v
+
+COPY staticfiles/fonts/arial.ttf /usr/share/fonts/truetype/arial.ttf
+COPY staticfiles/fonts/arialbd.ttf /usr/share/fonts/truetype/arialbd.ttf
+COPY staticfiles/fonts/ariali.ttf /usr/share/fonts/truetype/ariali.ttf
+COPY staticfiles/fonts/arialbi.ttf /usr/share/fonts/truetype/arialbi.ttf
+
+RUN apt-get update && \
+    apt-get install -y fontconfig && \
+    fc-cache -f -v
+
+# 4) Instalar dependencias Python
 COPY requirements.txt /app/requirements.txt
 
 RUN pip install --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r /app/requirements.txt \
     && rm -rf /root/.cache/pip
 
-# 4) Copiar el proyecto
+# 5) Copiar el proyecto
 COPY . /app
 
 RUN mkdir -p /app/staticfiles /app/media /app/logs \
