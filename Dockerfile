@@ -46,6 +46,11 @@ RUN apt-get update && \
     apt-get install -y fonts-liberation fontconfig && \
     fc-cache -f -v
 
+COPY sondajes/static/fonts/fonts-original/arial.ttf /usr/share/fonts/truetype/arial.ttf
+COPY sondajes/static/fonts/fonts-original/arialbd.ttf /usr/share/fonts/truetype/arialbd.ttf
+COPY sondajes/static/fonts/fonts-original/ariali.ttf /usr/share/fonts/truetype/ariali.ttf
+COPY sondajes/static/fonts/fonts-original/arialbi.ttf /usr/share/fonts/truetype/arialbi.ttf
+
 RUN apt-get update && \
     apt-get install -y fontconfig && \
     fc-cache -f -v
