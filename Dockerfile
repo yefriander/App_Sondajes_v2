@@ -46,10 +46,10 @@ RUN apt-get update && \
     apt-get install -y fonts-liberation fontconfig && \
     fc-cache -f -v
 
-COPY staticfiles/fonts/arial.ttf /usr/share/fonts/truetype/arial.ttf
-COPY staticfiles/fonts/arialbd.ttf /usr/share/fonts/truetype/arialbd.ttf
-COPY staticfiles/fonts/ariali.ttf /usr/share/fonts/truetype/ariali.ttf
-COPY staticfiles/fonts/arialbi.ttf /usr/share/fonts/truetype/arialbi.ttf
+COPY static/fonts/arial.ttf /usr/share/fonts/truetype/arial.ttf
+COPY static/fonts/arialbd.ttf /usr/share/fonts/truetype/arialbd.ttf
+COPY static/fonts/ariali.ttf /usr/share/fonts/truetype/ariali.ttf
+COPY static/fonts/arialbi.ttf /usr/share/fonts/truetype/arialbi.ttf
 
 RUN apt-get update && \
     apt-get install -y fontconfig && \
