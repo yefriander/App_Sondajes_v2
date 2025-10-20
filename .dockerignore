@@ -1,0 +1,63 @@
+# .dockerignore
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Entornos virtuales - CRÍTICO
+venv/
+env/
+ENV/
+.venv/
+virtualenv/
+
+# Base de datos
+*.sqlite3
+*.db
+
+# Archivos temporales
+*.log
+.DS_Store
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Archivos grandes
+*.zip
+*.tar
+*.tar.gz
+staticfiles/
+media/
+logs/
+
+# Node modules si los tienes
+node_modules/
+
+# Pytest cache
+.pytest_cache/
+.coverage
+
+# MyPy cache
+.mypy_cache/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Archivos de certificados (ya están en nginx/)
+*.pem
+*.key
+*.crt

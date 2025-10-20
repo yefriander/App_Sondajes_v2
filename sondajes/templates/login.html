@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <h2>Iniciar sesión</h2>
+        <p>Inicia sesión con tu cuenta de Microsoft de la empresa</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">
+            <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.svg" 
+                 alt="Microsoft" style="width: 20px; margin-right: 10px;">
+            Iniciar sesión con Microsoft
+        </a>
+    </div>
+{% endblock %}

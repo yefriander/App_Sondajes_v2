@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>Plantilla A4 de Reporte - 1m</title>
+        <style>
+            @page {size:A4;margin:1cm;
+            @bottom-center {content:element(footer);}}              
+            body {font-family: Arial, sans-serif;font-size: 11pt;}
+            .page {width:187mm;height:275mm;margin:0;padding: 1cm;box-sizing: border-box;}
+
+            table {width:166mm;height:69mm;}
+            table, td {border: 1px solid black;border-collapse: collapse;}
+            td {padding:5px;vertical-align: middle;text-align: left;}
+
+            .page-break {page-break-after: always;}
+            .footer {position: running(footer);}
+            .page-number .page::after {content: counter(page);}
+            .page-number .pages::after {content: counter(pages);}
+        </style>
+    </head>
+    <body>
+        {% for grupo in grupos_por_hoja %}
+        <div class="page">
+            {% for caja in grupo %}
+            {% if caja %}
+            <table>
+                <tr>
+                    <td style="height: 40px;text-align: center;">
+                        <p style="margin: 0;">
+                            <span style="margin-right: 20px;"><strong>Sondeo:</strong>{{ Hole_Id }}</span>
+                            <span style="margin-right: 20px;"><strong>Caja:</strong> {{ caja.Numero }} de {{ Total }}</span>
+                            <span><strong>Profundidad:</strong> {{ caja.Profundidad }}</span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <img style="max-height:44mm;max-width: 164mm;" src="{{ caja.data_uri }}" alt="Caja {{ caja.Numero }}">
+                    </td>
+                </tr>
+            </table>
+            {% endif %}
+            {% endfor %}
+
+            <table class="footer" style="width: 166mm;height: 40mm;position: absolute;bottom:1cm">
+                <tr>
+                    <td style="text-align: center;"><img style="max-width: 160px;max-height: 79px;" src="file:///app/sondajes/static/images/logo_reporte.png" alt="SRK"></td>
+                    <td style="text-align: center;">
+                        <p>
+                            <strong>Proyecto:</strong> {{ Codigo }} <br>
+                            <strong>Nombre:</strong> {{ Nombre }}
+                        </p>
+                    </td>
+                    <td style="text-align: center;"><img style="max-width: 160px;max-height: 79px;" src="{{ logo_data_uri }}" alt="{{Mina}}"></td>
+                </tr>
+                <tr>
+                    <td class="page-number" style="height: 45px;text-align: center;">
+                        Hoja <span class="page" style="padding: 0;"></span> de <span class="pages"></span>
+                    </td>
+                    <td style="height: 45px;text-align: center;">{{Hole_Id}}</td>
+                    <td style="height: 45px;text-align: center;">Fecha: {{Fecha}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="page-break"></div>
+        {% endfor %}
+    </body>
+</html>

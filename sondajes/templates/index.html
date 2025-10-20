@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Página de inicio{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="container">
+    <!-- Información del usuario -->
+    <div class="user-info">
+        <h2>Bienvenido, {{ user.displayName }}!</h2>
+        <p><strong>Email:</strong> {{ user.mail|default:user.userPrincipalName }}</p>
+        <p><strong>Cargo:</strong> {{ user.jobTitle|default:"No especificado" }}</p>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Cerrar sesión</a>
+    </div>
+
+    <!-- Filtros en cascada -->
+    <div class="filtros">
+        <h2>Procesamiento de Imágenes con YOLO</h2>
+        <div class="flex-container">
+            <!-- Filtro 1: Proyecto -->
+            <div >
+                <label for="select-proyecto">
+                    1. Seleccionar Proyecto:
+                </label>
+                <select id="select-proyecto" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="">-- Seleccione un proyecto --</option>
+                    {% for proyecto in proyectos %}
+                    <option value="{{ proyecto.codigo }}">
+                        {{ proyecto.codigo }} ({{ proyecto.mina }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filtro 2: Sondaje -->
+            <div >
+                <label for="select-sondaje">
+                    2. Seleccionar Sondaje (Hole ID):
+                </label>
+                <select id="select-sondaje" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" disabled>
+                    <option value="">-- Primero seleccione un proyecto --</option>
+                </select>
+            </div>
+
+            <!-- Botones -->
+            <div >
+                <button id="btn-cargar-registros" disabled>
+                    Cargar Registros
+                </button>
+                
+                <button id="btn-procesar-todos">
+                    Procesar Todos con YOLO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de resultados -->
+    <div id="resultados" style="margin-top: 20px;"></div>
+    
+    <!-- Área de visualización de imágenes -->
+    <div id="galeria-imagenes" style="margin-top: 20px; display: none;">
+        <div style="background: #F2F2F2; padding: 20px; border-radius: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            
+            <!-- Sección de botones de descarga de imágenes -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid #e9ecef;">
+                <h2 style="margin: 0;">Imágenes Procesadas</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btn-descargar-zip">
+                        Descargar Imágenes Seleccionadas (ZIP)
+                    </button>
+                    <button id="btn-descargar-zip-info">
+                        Descargar Imágenes con Info Seleccionadas (ZIP)
+                    </button>
+                </div>
+            </div>
+            
+            <!-- NUEVA SECCIÓN: Generación de Reportes -->
+            <div style="background: #ffffff; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; margin-bottom: 15px;">Generación de Reportes (PDF + DOCX)</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 30px;">
+                    <!-- Input para subir logo -->
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                            Logo del Proyecto:
+                        </label>
+                        <input type="file" id="input-logo" accept="image/png,image/jpeg,image/jpg">
+                        <small style="color: #666; display: block; margin-top: 5px;">PNG, JPG (max 2MB)</small>
+                    </div>
+                    
+                    <!-- Select para tipo de informe -->
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                            Tipo de Informe:
+                        </label>
+                        <select id="select-tipo-informe" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                            <option value="">-- Seleccione --</option>
+                            <option value="60">Informe 60cm (2 columnas)</option>
+                            <option value="100">Informe 100cm (1 columna)</option>
+                        </select>
+                    </div>
+
+                    <!-- NUEVO: Checkbox para generar DOCX -->
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                            Formatos:
+                        </label>
+                        <div style="background: white; border: 1px solid #ddd; border-radius: 4px; height: 39px; display: flex; align-items: center;">
+                            <input type="checkbox" id="checkbox-generar-docx" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                            <label for="checkbox-generar-docx" style="cursor: pointer; margin: 0;">Incluir DOCX</label>
+                        </div>
+                        <small style="color: #666; display: block; margin-top: 5px;">PDF siempre incluido</small>
+                    </div>
+                    
+                    <!-- Botón de generar reporte -->
+                    <div style="display: flex; align-items: flex-end;">
+                        <button id="btn-generar-reporte" disabled>
+                            Generar Reporte PDF
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mensaje de estado -->
+                <div id="mensaje-reporte" style="padding: 10px; border-radius: 4px; display: none;"></div>
+            </div>
+            
+            <!-- Grid de imágenes -->
+            <div id="contenedor-imagenes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                <!-- Las imágenes se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock %}

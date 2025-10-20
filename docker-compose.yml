@@ -1,0 +1,42 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: testigos_web:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=testigos.settings
+      - DEBUG=False
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    expose:
+      - "8000"
+    command: >
+      sh -c "
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
+      gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 10800 testigos.wsgi:application
+      "
+
+  nginx:
+    image: nginx:1.25-alpine
+    restart: always
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static_volume:/vol/staticfiles:ro
+      - media_volume:/vol/media:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/app.conf:ro
+      - ./nginx/cert.pem:/etc/nginx/ssl/cert.pem:ro
+      - ./nginx/key.pem:/etc/nginx/ssl/key.pem:ro
+
+volumes:
+  static_volume:
+  media_volume:
