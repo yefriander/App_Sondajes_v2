@@ -27,7 +27,9 @@ class YOLOProcessor:
         try:
             # Convertir PIL Image a formato compatible
             img_array = np.array(image)
-            
+            if img_array.shape[-1] == 4:
+                img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2RGB)
+             
             # Ejecutar detección
             results = self.model(img_array, verbose=False)
             
@@ -76,6 +78,8 @@ class YOLOProcessor:
         
         try:
             img_array = np.array(image)
+            if img_array.shape[-1] == 4:
+                img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2RGB)
             results = self.model(img_array, verbose=False)
             
             annotated_img = results[0].plot()
