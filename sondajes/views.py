@@ -341,7 +341,7 @@ def logout(request):
 
     logout_url = (
         f"https://login.microsoftonline.com/{settings.AZURE_TENANT_ID}/oauth2/v2.0/logout"
-        f"?post_logout_redirect_uri=http://localhost:8003/login/"
+        f"?post_logout_redirect_uri=https://192.168.1.11/login/"
     )
 
     return redirect(logout_url)
