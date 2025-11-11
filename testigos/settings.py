@@ -19,7 +19,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-bf836eva=8huk@gwryto61&0d%
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Configuración específica para producción
-ALLOWED_HOSTS = ['192.168.1.247', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['10.211.0.185', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -151,7 +151,7 @@ CSRF_COOKIE_SECURE = True  # Cambiado a True para HTTPS
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_TRUSTED_ORIGINS = [
-    'https://192.168.1.247',
+    'https://10.211.0.185',
     'https://localhost',
 ]
 
